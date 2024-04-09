@@ -135,9 +135,14 @@ export default function Profile() {
       dispatch(deleteUserSuccess(data));
 
       // Clear the cookie (assuming the cookie name is 'auth_token')
-      document.cookie = 'auth_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+      // document.cookie = 'auth_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+      // localStorage.removeItem('persist');
+      // localStorage.removeItem('auth_token'); // Remove the authentication token
+    // localStorage.removeItem('persist'); // Remove any other user data stored
+localStorage.clear();
+
       // Redirect to the home page
-      window.location.href = '/';
+       window.location.href = '/';
     } catch (error) {
       // If an error occurs during signout, dispatch deleteUserFailure action
       dispatch(deleteUserFailure(error.message));
