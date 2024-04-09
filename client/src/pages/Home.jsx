@@ -56,7 +56,7 @@ export default function Home() {
       </div>
       <div className="home-page-images">
         <img
-          src={`https://source.unsplash.com/random/1280x720/?hotels,cities,${imageIndex}`}
+          src={`https://source.unsplash.com/random/1280x720/?Vacation,Tour,${imageIndex}`}
           alt="Nature"
         />
         <img
@@ -66,7 +66,7 @@ export default function Home() {
           alt="City"
         />
         <img
-          src={`https://source.unsplash.com/random/1280x720/?bedroom,rooms,${
+          src={`https://source.unsplash.com/random/1280x720/?bedroom,Camping,${
             (imageIndex + 2) % 3
           }`}
           alt="City"
