@@ -7,7 +7,7 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../firebase';
-import { signOutUserStart, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
+import { signOutUserStart, signOutUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/user/userSlice';
 // import { signOutUserFailure, signOutUserSuccess, signInStart } from '../redux/user/userSlice';
 
@@ -94,7 +94,7 @@ export default function Profile() {
     }
   };
 
-  
+
   // delete user 
   const handleDeleteUser = async () => {
     try {
@@ -116,38 +116,36 @@ export default function Profile() {
 
 
   // sign out
+// sign out
 
-  const handleSignOut = async () => {
-    try {
-      dispatch(signOutUserStart());
+const handleSignOut = async () => {
+  try {
+    dispatch(signOutUserStart());
 
-      // Send signout request to the server
-      const res = await fetch('/api/auth/signout');
-      const data = await res.json();
+    // Send signout request to the server
+    const res = await fetch('/api/auth/signout');
+    const data = await res.json();
 
-      if (data.success === false) {
-        // If signout was unsuccessful, dispatch deleteUserFailure action
-        dispatch(deleteUserFailure(data.message));
-        return;
-      }
-
-      // If signout was successful, dispatch deleteUserSuccess action
-      dispatch(deleteUserSuccess(data));
-
-      // Clear the cookie (assuming the cookie name is 'auth_token')
-      // document.cookie = 'auth_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;';
-      // localStorage.removeItem('persist');
-      // localStorage.removeItem('auth_token'); // Remove the authentication token
-    // localStorage.removeItem('persist'); // Remove any other user data stored
-localStorage.clear();
-
-      // Redirect to the home page
-       window.location.href = '/';
-    } catch (error) {
-      // If an error occurs during signout, dispatch deleteUserFailure action
-      dispatch(deleteUserFailure(error.message));
+    if (data.success === false) {
+      // If signout was unsuccessful, dispatch deleteUserFailure action
+      dispatch(deleteUserFailure(data.message));
+      return;
     }
-  };
+
+    // If signout was successful, dispatch deleteUserSuccess action
+    dispatch(deleteUserSuccess(data));
+
+  } catch (error) {
+    // If an error occurs during signout, dispatch deleteUserFailure action
+    dispatch(deleteUserFailure(error.message));
+  } finally {
+    // Reset loading state regardless of success or failure
+    dispatch(signOutUserSuccess()); // Assuming sign-out was successful here
+  }
+};
+
+
+
 
 
   // show listing data on profile page
@@ -192,21 +190,21 @@ localStorage.clear();
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-      <input
+        <input
           onChange={(e) => setFile(e.target.files[0])}
           type='file'
           ref={fileRef}
           hidden
           accept='image/*'
         />
-         <img
+        <img
           onClick={() => fileRef.current.click()}
           src={formData.avatar || currentUser.avatar}
           alt='profile'
           className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'
         />
-       
-       <p className='text-sm self-center'>
+
+        <p className='text-sm self-center'>
           {fileUploadError ? (
             <span className='text-red-700'>
               Error Image upload (image must be less than 2 mb)
@@ -286,9 +284,9 @@ localStorage.clear();
                 </div>
                 <div className="  flex justify-stretch space-x-2">
                   <Link to={`/update-listing/${listing._id}`}>
-                  <button className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Update</button>
+                    <button className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Update</button>
                   </Link>
-                  
+
                   <button onClick={() => handleListingDelete(listing._id)} className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
                 </div>
               </div>

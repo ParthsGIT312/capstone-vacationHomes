@@ -7,6 +7,10 @@ import userRouter from "./routes/user.route.js"
 import authRouter from "./routes/auth.route.js"
 import listingRouter from "./routes/listing.route.js"
 
+// deploy
+
+import path from "path"; 
+
 
 // packeges 
 
@@ -29,6 +33,10 @@ mongoose
         console.log(error);
     });
 
+    // directory name
+    const _dirname = path.resolve();
+
+
 
 // Test API
 app.use("/api/user", userRouter);
@@ -41,6 +49,12 @@ app.use("/api/listing", listingRouter);
 app.listen(3000, () => {
     console.log('Server is running on port 3000...');
 });
+
+// deploy
+app.use(express.static(path.join(_dirname, '/client/dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(_dirname, 'client', 'dist', 'index.html'));
+})
 
 
 app.use((err, req, res, next) => {
